@@ -1,21 +1,21 @@
 export const onOpen = () => {
-  const menu = SlidesApp.getUi()
-    .createMenu('Qualtir')
-    .addItem('Import PDF', 'openSidebarImportPDF');
+  SlidesApp.getUi()
+    .createAddonMenu()
+    .addItem('PDF to Slides', 'openSidebarImportPDF')
+    .addToUi();
+  // const menu = SlidesApp.getUi()
+  //   .createMenu('Qualtir')
+  //   .addItem('Import PDF', 'openSidebarImportPDF');
   // .addItem('Sheet Editor', 'openDialog')
   // .addItem('Sheet Editor (Bootstrap)', 'openDialogBootstrap')
   // .addItem('Sheet Editor (MUI)', 'openDialogMUI')
   // .addItem('Sheet Editor (Tailwind CSS)', 'openDialogTailwindCSS')
   // .addItem('About me', 'openAboutSidebar');
-
-  menu.addToUi();
+  // menu.addToUi();
 };
 
 export const openSidebarImportPDF = () => {
-  const html = HtmlService.createHtmlOutputFromFile('pdf-to-slides')
-    .setWidth(600)
-    .setHeight(400);
-  // SlidesApp.getUi().showModalDialog(html, 'PDF to Slides');
+  const html = HtmlService.createHtmlOutputFromFile('pdf-to-slides');
   SlidesApp.getUi().showSidebar(html);
 };
 

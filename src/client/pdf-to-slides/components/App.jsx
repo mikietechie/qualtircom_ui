@@ -79,7 +79,7 @@ const App = () => {
               <input
                 onChange={(e) => setTitle(e.target.value || '')}
                 value={title}
-                placeholder="A mass whatsapp messaging platform software project proposal"
+                placeholder="A cool project"
                 className="form-control"
                 type="text"
                 name="title"
