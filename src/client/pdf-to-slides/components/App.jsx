@@ -7,26 +7,37 @@ const App = () => {
   const [title, setTitle] = useState('');
   const [file, setFile] = useState(null);
 
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     if (e.target.files) {
-      setFile(e.target.files[0]);
+      const newFile = e.target.files[0];
+      const fileBuffer = btoa(
+        new Uint8Array(await newFile.arrayBuffer()).reduce(
+          (data, byte) => data + String.fromCharCode(byte),
+          ''
+        )
+      );
+      console.log(fileBuffer);
+      setFile(fileBuffer);
     }
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (file) {
-      const formData = new FormData();
-      formData.append('document', file);
-      formData.append('title', title);
+      const baseURL = 'https://app-o6cilvuuja-uc.a.run.app';
+      // const baseURL = 'http://127.0.0.1:5001/qualtircomapi/us-central1/app';
       try {
-        const res = await fetch(
-          'https://app-o6cilvuuja-uc.a.run.app/api/v1/slides/convert',
-          {
-            method: 'POST',
-            body: formData,
-          }
-        );
+        const res = await fetch(`${baseURL}/api/v1/slides/convert`, {
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          method: 'POST',
+          body: JSON.stringify({
+            title,
+            document: file,
+          }),
+        });
         if (res.status !== 200) {
           console.log(res.body);
           throw new Error(res.statusText);
@@ -50,7 +61,7 @@ const App = () => {
     <div className="container-fluid">
       <div className="row">
         <div className="col-12">
-          <h1 className="my-3 text-center">PDF 2 Slides</h1>
+          <h1 className="my-3 text-center">PDF to Slides</h1>
           <form
             onSubmit={handleSubmit}
             className="py-5"
@@ -69,7 +80,7 @@ const App = () => {
               />
             </div>
             <div className="form-group mb-4">
-              <label htmlFor="file">PDF File</label>
+              <label htmlFor="file">Upload PDF</label>
               <input
                 onChange={handleFileChange}
                 placeholder="PDF file"
@@ -80,8 +91,8 @@ const App = () => {
               />
             </div>
             <div className="form-group mb-4 text-center">
-              <button className="btn btn-primary" type="submit">
-                Upload 🚀🚀🚀
+              <button className="btn rounded-pill" type="submit">
+                Generate Slide Deck
               </button>
             </div>
           </form>
