@@ -1,0 +1,17 @@
+.document-form-group {
+    border: 2px dotted black;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    border-radius: 16px;
+}
+
+.document-form-group input {
+    cursor: pointer;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 99;
+    opacity: 0;
+}

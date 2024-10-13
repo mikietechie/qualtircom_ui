@@ -6,17 +6,24 @@ import { serverFunctions } from '../../utils/serverFunctions';
 const App = () => {
   const [title, setTitle] = useState('');
   const [file, setFile] = useState(null);
+  const [fileName, setFileName] = useState(null);
 
   const handleFileChange = async (e) => {
     if (e.target.files) {
       const newFile = e.target.files[0];
+      console.log(newFile);
+      const { size, name } = newFile;
+      if (size > 1024 * 1024 * 6) {
+        alert('File should be less than 6 MB');
+        return;
+      }
       const fileBuffer = btoa(
         new Uint8Array(await newFile.arrayBuffer()).reduce(
           (data, byte) => data + String.fromCharCode(byte),
           ''
         )
       );
-      console.log(fileBuffer);
+      setFileName(name);
       setFile(fileBuffer);
     }
   };
@@ -64,7 +71,7 @@ const App = () => {
           <h1 className="my-3 text-center">PDF to Slides</h1>
           <form
             onSubmit={handleSubmit}
-            className="py-5"
+            className="py-3"
             encType="multipart/form-data"
           >
             <div className="form-group mb-4">
@@ -79,8 +86,14 @@ const App = () => {
                 required
               />
             </div>
-            <div className="form-group mb-4">
-              <label htmlFor="file">Upload PDF</label>
+            <div className="form-group mb-4 document-form-group p-1 py-3">
+              <label htmlFor="file" className="w-100 text-center mb-2">
+                <i className="fa-solid fa-2x fa-upload"></i>
+                &nbsp;Upload PDF
+              </label>
+              <label htmlFor="file" className="w-100 text-center">
+                {fileName || 'No file selected!'}
+              </label>
               <input
                 onChange={handleFileChange}
                 placeholder="PDF file"
@@ -91,8 +104,9 @@ const App = () => {
               />
             </div>
             <div className="form-group mb-4 text-center">
-              <button className="btn rounded-pill" type="submit">
-                Generate Slide Deck
+              <button className="btn bg-dark-subtle rounded-pill" type="submit">
+                <i className="fa-solid fa-wand-sparkles"></i>
+                &nbsp;Generate Slide Deck
               </button>
             </div>
           </form>
