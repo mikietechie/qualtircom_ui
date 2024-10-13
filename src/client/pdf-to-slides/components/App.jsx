@@ -7,6 +7,7 @@ const App = () => {
   const [title, setTitle] = useState('');
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState(null);
+  const [busy, setBusy] = useState(false);
 
   const handleFileChange = async (e) => {
     if (e.target.files) {
@@ -30,6 +31,10 @@ const App = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (busy) {
+      return false;
+    }
+    setBusy(true);
     if (file) {
       const baseURL = 'https://app-o6cilvuuja-uc.a.run.app';
       // const baseURL = 'http://127.0.0.1:5001/qualtircomapi/us-central1/app';
@@ -61,6 +66,7 @@ const App = () => {
     } else {
       alert('File not found.');
     }
+    setBusy(false);
     return false;
   };
 
@@ -104,11 +110,24 @@ const App = () => {
               />
             </div>
             <div className="form-group mb-4 text-center">
-              <button className="btn bg-dark-subtle rounded-pill" type="submit">
+              <button
+                disabled={busy}
+                className={`btn bg-${
+                  busy ? 'success' : 'dark-subtle'
+                } rounded-pill`}
+                type="submit"
+              >
                 <i className="fa-solid fa-wand-sparkles"></i>
                 &nbsp;Generate Slide Deck
               </button>
             </div>
+            {busy ? (
+              <p className="text-success text-center">
+                <b>Please wait, process is running !</b>
+              </p>
+            ) : (
+              <></>
+            )}
           </form>
         </div>
       </div>
